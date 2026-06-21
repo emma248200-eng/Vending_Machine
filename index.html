@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Slot Machine 💖</title>
+    <style>
+        :root {
+            --pink-light: #fff0f3;
+            --pink-soft: #fce4ec;
+            --pink: #f8bbd0;
+            --pink-mid: #f48fb1;
+            --pink-deep: #e91e63;
+            --cream: #fff9f5;
+            --pastel-red: #ef9a9a;
+            --white-glass: rgba(255, 255, 255, 0.55);
+            --white-glass-strong: rgba(255, 255, 255, 0.75);
+            --gold: #f4c430;
+            --text-dark: #5d3a4a;
+            --text-medium: #7d5a6b;
+            --shadow-soft: 0 8px 32px rgba(180, 120, 140, 0.2);
+            --shadow-card: 0 12px 40px rgba(180, 120, 140, 0.3);
+            --radius-lg: 28px;
+            --radius-md: 18px;
+            --radius-sm: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(160deg, #fff0f3 0%, #fce4ec 20%, #fff5f5 40%, #fde8ec 60%, #fff0f5 80%, #fce4ec 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* ── Floating Hearts Background ── */
+        #hearts-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+        .floating-heart {
+            position: absolute;
+            bottom: -60px;
+            animation: floatUp linear infinite;
+            opacity: 0;
+            pointer-events: none;
+            will-change: transform;
+        }
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.7;
+            }
+            15% {
+                transform: translateY(-12vh) translateX(15px) rotate(8deg) scale(0.8);
+                opacity: 0.65;
+            }
+            35% {
+                transform: translateY(-30vh) translateX(-20px) rotate(-5deg) scale(0.9);
+                opacity: 0.55;
+            }
+            55% {
+                transform: translateY(-52vh) translateX(25px) rotate(12deg) scale(1);
+                opacity: 0.5;
+            }
+            75% {
+                transform: translateY(-72vh) translateX(-15px) rotate(-8deg) scale(0.85);
+                opacity: 0.35;
+            }
+            90% {
+                transform: translateY(-90vh) translateX(10px) rotate(3deg) scale(0.6);
+                opacity: 0.12;
+            }
+            100% {
+                transform: translateY(-105vh) translateX(0) rotate(0deg) scale(0.3);
+                opacity: 0;
+            }
+        }
+
+        /* ── Main Wrapper ── */
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 520px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+
+        /* ── Title ── */
+        .title-area {
+            text-align: center;
+        }
+        .title {
+            font-size: clamp(1.8rem, 5vw, 2.6rem);
+            font-weight: 700;
+            color: #d4687c;
+            letter-spacing: 0.03em;
+            text-shadow: 0 2px 8px rgba(210, 100, 120, 0.25);
+            font-family: 'Georgia', 'Times New Roman', serif;
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+        @keyframes titlePulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.03);
+            }
+        }
+        .subtitle {
+            font-size: 0.95rem;
+            color: #b88690;
+            margin-top: 4px;
+            letter-spacing: 0.04em;
+            font-style: italic;
+        }
+
+        /* ── Slot Machine ── */
+        .slot-machine-frame {
+            background: var(--white-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 220, 225, 0.6);
+            border-radius: var(--radius-lg);
+            padding: 24px 20px 20px;
+            box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            transition: box-shadow 0.4s ease;
+        }
+        .slot-machine-frame.spinning {
+            box-shadow: var(--shadow-card), 0 0 60px rgba(255, 150, 170, 0.35),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        }
+        .slot-machine-frame.jackpot-glow {
+            box-shadow: 0 0 80px rgba(255, 180, 60, 0.7), 0 0 120px rgba(255, 150, 80, 0.5),
+                0 0 200px rgba(255, 200, 100, 0.35), var(--shadow-card);
+            border-color: rgba(255, 200, 100, 0.8);
+            animation: glowPulse 0.6s ease-in-out infinite;
+        }
+        @keyframes glowPulse {
+            0%,
+            100% {
+                box-shadow: 0 0 60px rgba(255, 180, 60, 0.6), 0 0 100px rgba(255, 150, 80, 0.4), 0 0 160px rgba(255, 200, 100, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 100px rgba(255, 200, 60, 0.9), 0 0 150px rgba(255, 170, 80, 0.7), 0 0
+                    220px rgba(255, 220, 120, 0.5);
+            }
+        }
+        /* Top decoration */
+        .slot-top-ornament {
+            font-size: 1.8rem;
+            letter-spacing: 6px;
+            opacity: 0.8;
+            animation: ornamentShine 2s ease-in-out infinite;
+        }
+        @keyframes ornamentShine {
+            0%,
+            100% {
+                filter: brightness(1);
+            }
+            50% {
+                filter: brightness(1.3);
+            }
+        }
+        /* Reels row */
+        .reels-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 4px;
+        }
+        .reel-window {
+            width: clamp(70px, 18vw, 100px);
+            height: clamp(90px, 22vw, 120px);
+            background: linear-gradient(180deg, #fdf0f3 0%, #ffe8ed 15%, #fff5f6 50%, #ffe8ed 85%, #fdf0f3 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(2.8rem, 8vw, 4.2rem);
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 3px 10px rgba(180, 120, 140, 0.18),
+                inset 0 -3px 10px rgba(180, 120, 140, 0.12),
+                0 3px 8px rgba(180, 120, 140, 0.2);
+            border: 2px solid rgba(220, 170, 180, 0.5);
+            transition: all 0.2s ease;
+        }
+        .reel-window.spinning-reel {
+            border-color: rgba(240, 150, 170, 0.7);
+            box-shadow: inset 0 3px 10px rgba(200, 100, 130, 0.25),
+                inset 0 -3px 10px rgba(200, 100, 130, 0.18),
+                0 3px 14px rgba(200, 120, 150, 0.35);
+        }
+        .reel-window.stopped-reel {
+            animation: reelStopBounce 0.35s ease-out;
+        }
+        @keyframes reelStopBounce {
+            0% {
+                transform: translateY(-8px);
+            }
+            40% {
+                transform: translateY(4px);
+            }
+            70% {
+                transform: translateY(-2px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        .reel-window.jackpot-reel {
+            border-color: rgba(255, 180, 60, 0.8) !important;
+            box-shadow: inset 0 3px 10px rgba(200, 140, 60, 0.3),
+                inset 0 -3px 10px rgba(200, 140, 60, 0.2),
+                0 3px 14px rgba(255, 180, 60, 0.5) !important;
+            animation: reelJackpotGlow 0.5s ease-in-out infinite;
+        }
+        @keyframes reelJackpotGlow {
+            0%,
+            100% {
+                box-shadow: inset 0 3px 10px rgba(200, 140, 60, 0.3), 0 3px 14px rgba(255, 180, 60, 0.5);
+            }
+            50% {
+                box-shadow: inset 0 3px 16px rgba(255, 170, 40, 0.5), 0 3px 22px rgba(255, 190, 60, 0.8);
+            }
+        }
+        .reel-shine {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 100%);
+            pointer-events: none;
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            z-index: 2;
+        }
+        .reel-emoji {
+            position: relative;
+            z-index: 1;
+            transition: none;
+            line-height: 1;
+        }
+
+        /* ── Spin Button ── */
+        .spin-btn {
+            background: linear-gradient(135deg, #f8a4b8 0%, #e97d95 40%, #f06b88 100%);
+            color: #fff;
+            border: none;
+            padding: 14px 36px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            box-shadow: 0 6px 24px rgba(230, 100, 130, 0.4), 0 2px 6px rgba(200, 80, 110, 0.3);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+            position: relative;
+            overflow: hidden;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            z-index: 1;
+        }
+        .spin-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 32px rgba(230, 100, 130, 0.5), 0 4px 10px rgba(200, 80, 110, 0.35);
+            background: linear-gradient(135deg, #fbb2c4 0%, #f08ba0 40%, #f27892 100%);
+        }
+        .spin-btn:active {
+            transform: translateY(1px) scale(0.97);
+            box-shadow: 0 3px 12px rgba(200, 80, 110, 0.4);
+            transition: all 0.1s ease;
+        }
+        .spin-btn:disabled {
+            background: #e0c0ca;
+            cursor: not-allowed;
+            box-shadow: 0 3px 10px rgba(180, 130, 150, 0.25);
+            transform: none;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        .spin-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 50%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.25);
+            transform: rotate(25deg);
+            transition: left 0.6s ease;
+            pointer-events: none;
+        }
+        .spin-btn:hover::after {
+            left: 120%;
+        }
+        .spin-btn .btn-text {
+            position: relative;
+            z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ── Love Points ── */
+        .points-display {
+            background: var(--white-glass-strong);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 10px 22px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #c96075;
+            border: 1.5px solid rgba(240, 180, 190, 0.5);
+            box-shadow: 0 3px 12px rgba(180, 120, 140, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 0.03em;
+            transition: all 0.3s ease;
+        }
+        .points-display.points-pop {
+            animation: pointsBounce 0.5s ease-out;
+        }
+        @keyframes pointsBounce {
+            0% {
+                transform: scale(1);
+            }
+            30% {
+                transform: scale(1.18);
+            }
+            60% {
+                transform: scale(0.95);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .points-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e05a75;
+            transition: all 0.3s ease;
+        }
+
+        /* ── Reward Card Overlay ── */
+        .reward-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(60, 20, 30, 0.45);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInOverlay 0.3s ease;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        @keyframes fadeInOverlay {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .reward-card {
+            background: var(--white-glass-strong);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px 24px;
+            text-align: center;
+            max-width: 380px;
+            width: 90%;
+            box-shadow: var(--shadow-card), 0 0 60px rgba(255, 180, 200, 0.4);
+            border: 2px solid rgba(255, 220, 230, 0.7);
+            position: relative;
+            animation: cardPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 101;
+        }
+        @keyframes cardPopIn {
+            0% {
+                transform: scale(0.5) translateY(40px);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.04) translateY(-4px);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+        .reward-card.jackpot-card {
+            border-color: rgba(255, 200, 80, 0.9);
+            box-shadow: 0 0 80px rgba(255, 180, 40, 0.6), 0 0 150px rgba(255, 150, 60, 0.4);
+            animation: cardPopIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                jackpotCardGlow 1s ease-in-out infinite 0.6s;
+        }
+        @keyframes jackpotCardGlow {
+            0%,
+            100% {
+                box-shadow: 0 0 60px rgba(255, 180, 40, 0.5), 0 0 120px rgba(255, 150, 60, 0.35);
+            }
+            50% {
+                box-shadow: 0 0 100px rgba(255, 200, 40, 0.8), 0 0 180px rgba(255, 170, 60, 0.6);
+            }
+        }
+        .reward-emoji-large {
+            font-size: 4.5rem;
+            animation: rewardEmojiBounce 0.7s ease-out;
+            display: block;
+            line-height: 1;
+        }
+        @keyframes rewardEmojiBounce {
+            0% {
+                transform: scale(0) rotate(-30deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.3) rotate(8deg);
+                opacity: 1;
+            }
+            70% {
+                transform: scale(0.9) rotate(-3deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+        }
+        .reward-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #c9556e;
+            margin: 10px 0 6px;
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+        .reward-message {
+            font-size: 1rem;
+            color: #7d5a6b;
+            line-height: 1.5;
+            font-style: italic;
+        }
+        .close-reward-btn {
+            margin-top: 16px;
+            background: linear-gradient(135deg, #f8a4b8, #e97d95);
+            color: #fff;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.03em;
+            box-shadow: 0 4px 16px rgba(220, 100, 130, 0.35);
+            transition: all 0.3s ease;
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+        .close-reward-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(220, 100, 130, 0.5);
+        }
+
+        /* ── Jackpot Fullscreen Celebration ── */
+        #jackpot-celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 200;
+            pointer-events: none;
+            display: none;
+        }
+        #jackpot-celebration.active {
+            display: block;
+            pointer-events: all;
+        }
+        #fireworks-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 201;
+            pointer-events: none;
+        }
+        .jackpot-message-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 202;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 30px 24px;
+            border: 3px solid rgba(255, 200, 60, 0.8);
+            box-shadow: 0 0 100px rgba(255, 180, 40, 0.7);
+            animation: jackpotMessageIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            max-width: 440px;
+            width: 90%;
+            pointer-events: all;
+        }
+        @keyframes jackpotMessageIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0.2) rotate(-15deg);
+                opacity: 0;
+            }
+            60% {
+                transform: translate(-50%, -50%) scale(1.08) rotate(3deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+        .jackpot-message-overlay .jp-emoji {
+            font-size: 5rem;
+            animation: jpEmojiSpin 2s ease-in-out infinite;
+        }
+        @keyframes jpEmojiSpin {
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+            25% {
+                transform: scale(1.2) rotate(5deg);
+            }
+            75% {
+                transform: scale(1.1) rotate(-5deg);
+            }
+        }
+        .jackpot-message-overlay .jp-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #d46830;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            margin: 8px 0;
+        }
+        .jackpot-message-overlay .jp-text {
+            font-size: 1.05rem;
+            color: #6b3a3a;
+            line-height: 1.6;
+            font-style: italic;
+        }
+        .jackpot-message-overlay .jp-close {
+            margin-top: 14px;
+            background: #f4c430;
+            color: #5d3a1a;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            box-shadow: 0 4px 20px rgba(200, 150, 30, 0.5);
+            transition: all 0.3s ease;
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+
+        /* ── Confetti Particles ── */
+        .confetti-particle {
+            position: fixed;
+            z-index: 150;
+            pointer-events: none;
+            animation: confettiFall linear forwards;
+            will-change: transform;
+        }
+        @keyframes confettiFall {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            40% {
+                opacity: 0.9;
+            }
+            100% {
+                transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.2);
+                opacity: 0;
+            }
+        }
+
+        /* ── Sparkles around reward card ── */
+        .sparkle-dot {
+            position: fixed;
+            z-index: 155;
+            pointer-events: none;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ffd700;
+            animation: sparklePop 0.8s ease-out forwards;
+            box-shadow: 0 0 8px #ffd700, 0 0 16px #ffb800;
+        }
+        @keyframes sparklePop {
+            0% {
+                transform: translate(0, 0) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--sx), var(--sy)) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .slot-machine-frame {
+                padding: 16px 10px 14px;
+                gap: 10px;
+                border-radius: 22px;
+            }
+            .reels-container {
+                gap: 8px;
+            }
+            .reel-window {
+                width: clamp(55px, 16vw, 75px);
+                height: clamp(70px, 20vw, 95px);
+                font-size: clamp(2.2rem, 7vw, 3.2rem);
+                border-radius: 12px;
+            }
+            .spin-btn {
+                padding: 12px 28px;
+                font-size: 1rem;
+                border-radius: 40px;
+            }
+            .reward-card {
+                padding: 20px 16px;
+                border-radius: 20px;
+            }
+            .reward-emoji-large {
+                font-size: 3.5rem;
+            }
+            .reward-title {
+                font-size: 1.25rem;
+            }
+            .jackpot-message-overlay {
+                padding: 20px 16px;
+            }
+            .jackpot-message-overlay .jp-emoji {
+                font-size: 3.5rem;
+            }
+            .jackpot-message-overlay .jp-title {
+                font-size: 1.5rem;
+            }
+            .jackpot-message-overlay .jp-text {
+                font-size: 0.9rem;
+            }
+        }
+        @media (max-width: 360px) {
+            .reel-window {
+                width: 50px;
+                height: 65px;
+                font-size: 1.8rem;
+                border-radius: 10px;
+            }
+            .reels-container {
+                gap: 5px;
+            }
+            .spin-btn {
+                padding: 10px 22px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Hearts Background -->
+    <div id="hearts-bg"></div>
+
+    <!-- Fireworks Canvas for Jackpot -->
+    <canvas id="fireworks-canvas"></canvas>
+
+    <!-- Jackpot Fullscreen Celebration -->
+    <div id="jackpot-celebration">
+        <div class="jackpot-message-overlay" id="jackpot-message-box">
+            <span class="jp-emoji">🏆</span>
+            <div class="jp-title">Jackpot of Eternal Love!</div>
+            <p class="jp-text">
+                Congratulations! Aapko mai apni sari zindgi tng krugi will always annoy hehe. No refunds allowed. ❤️
+            </p>
+            <button class="jp-close" id="jp-close-btn">💖 Claim My Prize 💖</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-wrapper" id="main-wrapper">
+        <!-- Title -->
+        <div class="title-area">
+            <h1 class="title">💖 Love Slot Machine 💖</h1>
+            <p class="subtitle">Spin & win a sweet surprise, my love</p>
+        </div>
+
+        <!-- Slot Machine -->
+        <div class="slot-machine-frame" id="slot-frame">
+            <div class="slot-top-ornament">✨ 💎 ✨</div>
+            <div class="reels-container">
+                <div class="reel-window" id="reel-0">
+                    <span class="reel-emoji">💖</span>
+                    <div class="reel-shine"></div>
+                </div>
+                <div class="reel-window" id="reel-1">
+                    <span class="reel-emoji">💖</span>
+                    <div class="reel-shine"></div>
+                </div>
+                <div class="reel-window" id="reel-2">
+                    <span class="reel-emoji">💖</span>
+                    <div class="reel-shine"></div>
+                </div>
+            </div>
+            <div class="slot-top-ornament" style="font-size:1.2rem;">🎀 💝 🎀</div>
+        </div>
+
+        <!-- Spin Button -->
+        <button class="spin-btn" id="spin-btn">
+            <span class="btn-text">Spin for Love 💖</span>
+        </button>
+
+        <!-- Love Points -->
+        <div class="points-display" id="points-display">
+            💕 Love Points Earned: <span class="points-value" id="points-value">0</span>
+        </div>
+    </div>
+
+    <!-- Reward Card Overlay (hidden by default) -->
+    <div class="reward-overlay" id="reward-overlay" style="display:none;">
+        <div class="reward-card" id="reward-card">
+            <span class="reward-emoji-large" id="reward-emoji-large">💋</span>
+            <div class="reward-title" id="reward-title">Kiss Coupon</div>
+            <p class="reward-message" id="reward-message">Redeemable for one sweet kiss!</p>
+            <button class="close-reward-btn" id="close-reward-btn">💝 Aww, Thank You! 💝</button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // ──────────────────────────────────────
+            // CONFIGURATION
+            // ──────────────────────────────────────
+            const REWARDS = [
+                { emoji: '💋', title: 'Kiss Coupon', message: 'Aap jbb bhi merese kiss le skte mai mna ni krr skti whenever u wanna kiss me use this coupon. 💋',
+                    points: 10 },
+                { emoji: '🤗', title: 'Unlimited Hug Voucher',
+                    message: 'This is the voucher of unlimited hugs hehehe! 🤗',
+                    points: 10 },
+                { emoji: '🎬', title: 'Movie Night Date',
+                    message: 'Jbb aapko meresath movie dekhni ho to yeh use krna okay babbyy i won't be able to say no. 🎬🍿',
+                    points: 10 },
+                { emoji: '🧸', title: 'You Owe Me Cuddles Card',
+                    message: 'Official notice: You now legally owe me ALL the cuddles. Aapko meko tbtk hug krna hoga tbtk aapko acha na feel ho. 🧸',
+                    points: 10 },
+                { emoji: '🍫', title: 'Sweet Treat Voucher',
+                    message: 'Aapko jbb bhi koi desert khane ka mnn ho to yeh coupon use krna i'll buy u one! 🍫🍰',
+                    points: 10 },
+                { emoji: '✨', title: 'One Wish Granted',
+                    message: 'Your wish is my command! (Terms and conditions: wish must involve love, laughter, or us.) ✨',
+                    points: 10 },
+                { emoji: '💕', title: '100 Extra Kisses',
+                    message: 'You just earned 100 extra kisses! Start counting — I\'ll deliver every single one. Muah! 💕😘', points: 10 },
+                { emoji: '🌸', title: 'A Special Memory From Us',
+                    message: 'Let\'s relive one of our most beautiful memories together — and create an even better new one shonu. 🌸✨',
+                    points: 10 },
+            ];
+
+            const JACKPOT = {
+                emoji: '👑',
+                title: '🏆 Jackpot of Eternal Love 🏆',
+                message: 'Congratulations! You have officially won a lifetime supply of my love, hugs, kisses, and endless annoying messages. No refunds allowed. ❤️',
+                points: 100,
+            };
+
+            const JACKPOT_CHANCE = 0.06; // 6% chance
+            const CYCLE_EMOJIS = ['💖', '💕', '💗', '💝', '💘', '🌸', '✨', '🎀', '💋', '🧸', '🌹', '🍫', '💌', '🤗', '🎬', '💎',
+                '🍀', '🌟'
+            ];
+
+            // ──────────────────────────────────────
+            // DOM ELEMENTS
+            // ──────────────────────────────────────
+            const heartsBg = document.getElementById('hearts-bg');
+            const slotFrame = document.getElementById('slot-frame');
+            const spinBtn = document.getElementById('spin-btn');
+            const pointsDisplay = document.getElementById('points-display');
+            const pointsValueEl = document.getElementById('points-value');
+            const rewardOverlay = document.getElementById('reward-overlay');
+            const rewardCard = document.getElementById('reward-card');
+            const rewardEmojiLarge = document.getElementById('reward-emoji-large');
+            const rewardTitle = document.getElementById('reward-title');
+            const rewardMessage = document.getElementById('reward-message');
+            const closeRewardBtn = document.getElementById('close-reward-btn');
+            const jackpotCelebration = document.getElementById('jackpot-celebration');
+            const jackpotMessageBox = document.getElementById('jackpot-message-box');
+            const jpCloseBtn = document.getElementById('jp-close-btn');
+            const fireworksCanvas = document.getElementById('fireworks-canvas');
+            const ctx = fireworksCanvas.getContext('2d');
+            const reelWindows = [document.getElementById('reel-0'), document.getElementById('reel-1'), document
+                .getElementById('reel-2')
+            ];
+            const reelEmojis = reelWindows.map(r => r.querySelector('.reel-emoji'));
+
+            // ──────────────────────────────────────
+            // STATE
+            // ──────────────────────────────────────
+            let lovePoints = parseInt(localStorage.getItem('loveSlotPoints') || '0');
+            let isSpinning = false;
+            let reelTimers = [null, null, null];
+            let currentReward = null;
+            let isJackpot = false;
+
+            // ──────────────────────────────────────
+            // INIT
+            // ──────────────────────────────────────
+            function init() {
+                updatePointsDisplay(false);
+                createFloatingHearts();
+                resizeCanvas();
+                window.addEventListener('resize', resizeCanvas);
+                spinBtn.addEventListener('click', handleSpin);
+                closeRewardBtn.addEventListener('click', closeRewardOverlay);
+                rewardOverlay.addEventListener('click', function(e) {
+                    if (e.target === rewardOverlay) closeRewardOverlay();
+                });
+                jpCloseBtn.addEventListener('click', closeJackpotCelebration);
+                // Initialize reels
+                reelEmojis.forEach(el => { el.textContent = '💖'; });
+            }
+
+            function resizeCanvas() {
+                fireworksCanvas.width = window.innerWidth;
+                fireworksCanvas.height = window.innerHeight;
+            }
+
+            // ──────────────────────────────────────
+            // FLOATING HEARTS BACKGROUND
+            // ──────────────────────────────────────
+            function createFloatingHearts() {
+                const heartEmojis = ['❤️', '💕', '💖', '💗', '💝', '💘', '♥️', '🩷', '💓', '💞'];
+                const count = 28;
+                for (let i = 0; i < count; i++) {
+                    const heart = document.createElement('span');
+                    heart.classList.add('floating-heart');
+                    heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                    heart.style.left = Math.random() * 95 + '%';
+                    heart.style.fontSize = (Math.random() * 28 + 14) + 'px';
+                    heart.style.animationDuration = (Math.random() * 14 + 9) + 's';
+                    heart.style.animationDelay = (Math.random() * 16) + 's';
+                    heart.style.opacity = '0';
+                    heartsBg.appendChild(heart);
+                }
+            }
+
+            // ──────────────────────────────────────
+            // SOUND SYNTHESIS (Web Audio API)
+            // ──────────────────────────────────────
+            let audioCtx = null;
+
+            function getAudioContext() {
+                if (!audioCtx) {
+                    audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                }
+                return audioCtx;
+            }
+
+            function playTick() {
+                try {
+                    const ctx = getAudioContext();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(400, ctx.currentTime + 0.04);
+                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.05);
+                } catch (e) { /* silent */ }
+            }
+
+            function playDing() {
+                try {
+                    const ctx = getAudioContext();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(900, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0.18, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.4);
+                } catch (e) { /* silent */ }
+            }
+
+            function playJackpotSound() {
+                try {
+                    const ctx = getAudioContext();
+                    const notes = [523, 659, 784, 1047, 784, 1047, 1319];
+                    notes.forEach((freq, i) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+                        osc.type = 'triangle';
+                        const t = ctx.currentTime + i * 0.12;
+                        osc.frequency.setValueAtTime(freq, t);
+                        gain.gain.setValueAtTime(0.15, t);
+                        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+                        osc.start(t);
+                        osc.stop(t + 0.25);
+                    });
+                } catch (e) { /* silent */ }
+            }
+
+            // ──────────────────────────────────────
+            // SPIN LOGIC
+            // ──────────────────────────────────────
+            function handleSpin() {
+                if (isSpinning) return;
+                isSpinning = true;
+                isJackpot = false;
+                spinBtn.disabled = true;
+                slotFrame.classList.add('spinning');
+                slotFrame.classList.remove('jackpot-glow');
+                reelWindows.forEach(r => {
+                    r.classList.remove('stopped-reel', 'jackpot-reel');
+                    r.classList.add('spinning-reel');
+                });
+
+                // Determine reward
+                const roll = Math.random();
+                if (roll < JACKPOT_CHANCE) {
+                    currentReward = JACKPOT;
+                    isJackpot = true;
+                } else {
+                    currentReward = REWARDS[Math.floor(Math.random() * REWARDS.length)];
+                }
+
+                const targetEmoji = currentReward.emoji;
+
+                // Spin each reel with staggered stop times
+                const totalDuration = 2600; // ms for all reels
+                const reelStopTimes = [1400, 1900, 2400]; // when each reel starts decelerating
+                const reelFinalStop = [1800, 2300, 2700]; // when each fully stops
+
+                reelWindows.forEach((reelWindow, reelIndex) => {
+                    spinSingleReel(reelIndex, targetEmoji, reelStopTimes[reelIndex], reelFinalStop[
+                        reelIndex]);
+                });
+
+                // After all reels stop, reveal reward
+                const maxStopTime = Math.max(...reelFinalStop);
+                setTimeout(() => {
+                    revealReward();
+                }, maxStopTime + 350);
+            }
+
+            function spinSingleReel(reelIndex, targetEmoji, decelStart, finalStop) {
+                const reelEl = reelEmojis[reelIndex];
+                const reelWindow = reelWindows[reelIndex];
+                const startTime = performance.now();
+                let fastInterval = 55;
+                let tickCount = 0;
+                let lastTickTime = startTime;
+
+                function getElapsed() {
+                    return performance.now() - startTime;
+                }
+
+                function tick() {
+                    const elapsed = getElapsed();
+                    if (elapsed >= finalStop) {
+                        // Final stop
+                        reelEl.textContent = targetEmoji;
+                        reelWindow.classList.remove('spinning-reel');
+                        reelWindow.classList.add('stopped-reel');
+                        if (isJackpot) {
+                            reelWindow.classList.add('jackpot-reel');
+                        }
+                        playDing();
+                        return;
+                    }
+
+                    // Pick random emoji during fast phase, guide toward target during decel
+                    if (elapsed < decelStart) {
+                        // Fast spin - random
+                        reelEl.textContent = CYCLE_EMOJIS[Math.floor(Math.random() * CYCLE_EMOJIS.length)];
+                        playTick();
+                        tickCount++;
+                        const nextTick = fastInterval + (Math.random() * 20 - 10);
+                        reelTimers[reelIndex] = setTimeout(tick, Math.max(30, nextTick));
+                    } else {
+                        // Deceleration phase
+                        const decelProgress = (elapsed - decelStart) / (finalStop - decelStart);
+                        const currentInterval = fastInterval + decelProgress * decelProgress * 350;
+                        // Guide toward target in last 40% of decel
+                        if (decelProgress > 0.6) {
+                            const chanceOfTarget = decelProgress * decelProgress;
+                            if (Math.random() < chanceOfTarget) {
+                                reelEl.textContent = targetEmoji;
+                            } else {
+                                reelEl.textContent = CYCLE_EMOJIS[Math.floor(Math.random() * CYCLE_EMOJIS
+                                    .length)];
+                            }
+                        } else {
+                            reelEl.textContent = CYCLE_EMOJIS[Math.floor(Math.random() * CYCLE_EMOJIS.length)];
+                        }
+                        playTick();
+                        tickCount++;
+                        reelTimers[reelIndex] = setTimeout(tick, Math.max(55, currentInterval));
+                    }
+                }
+
+                // Start ticking
+                reelTimers[reelIndex] = setTimeout(tick, fastInterval);
+            }
+
+            // ──────────────────────────────────────
+            // REWARD REVEAL
+            // ──────────────────────────────────────
+            function revealReward() {
+                slotFrame.classList.remove('spinning');
+                if (isJackpot) {
+                    slotFrame.classList.add('jackpot-glow');
+                }
+
+                // Populate reward card
+                rewardEmojiLarge.textContent = currentReward.emoji;
+                rewardTitle.textContent = currentReward.title;
+                rewardMessage.textContent = currentReward.message;
+
+                if (isJackpot) {
+                    rewardCard.classList.add('jackpot-card');
+                } else {
+                    rewardCard.classList.remove('jackpot-card');
+                }
+
+                // Show overlay
+                rewardOverlay.style.display = 'flex';
+                rewardCard.style.animation = 'none';
+                void rewardCard.offsetWidth;
+                rewardCard.style.animation = 'cardPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                rewardEmojiLarge.style.animation = 'none';
+                void rewardEmojiLarge.offsetWidth;
+                rewardEmojiLarge.style.animation = 'rewardEmojiBounce 0.7s ease-out';
+
+                // Spawn confetti & sparkles
+                spawnConfetti(isJackpot ? 80 : 35);
+                spawnSparkles(18);
+
+                // Update points
+                lovePoints += currentReward.points;
+                localStorage.setItem('loveSlotPoints', lovePoints.toString());
+                updatePointsDisplay(true);
+
+                // Jackpot special
+                if (isJackpot) {
+                    setTimeout(() => {
+                        triggerJackpotCelebration();
+                    }, 400);
+                    playJackpotSound();
+                } else {
+                    playDing();
+                }
+
+                // Re-enable button after a moment
+                setTimeout(() => {
+                    spinBtn.disabled = false;
+                }, 600);
+            }
+
+            function closeRewardOverlay() {
+                rewardOverlay.style.display = 'none';
+                rewardCard.classList.remove('jackpot-card');
+                slotFrame.classList.remove('jackpot-glow');
+                reelWindows.forEach(r => r.classList.remove('jackpot-reel', 'stopped-reel'));
+                if (!isJackpot) {
+                    spinBtn.disabled = false;
+                }
+                isSpinning = false;
+            }
+
+            // ──────────────────────────────────────
+            // JACKPOT CELEBRATION
+            // ──────────────────────────────────────
+            function triggerJackpotCelebration() {
+                jackpotCelebration.classList.add('active');
+                jackpotMessageBox.style.animation = 'none';
+                void jackpotMessageBox.offsetWidth;
+                jackpotMessageBox.style.animation =
+                    'jackpotMessageIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                startFireworks();
+                // Flood extra hearts
+                spawnExtraHearts(50);
+                playJackpotSound();
+            }
+
+            function closeJackpotCelebration() {
+                jackpotCelebration.classList.remove('active');
+                stopFireworks();
+                slotFrame.classList.remove('jackpot-glow');
+                reelWindows.forEach(r => r.classList.remove('jackpot-reel', 'stopped-reel'));
+                rewardOverlay.style.display = 'none';
+                rewardCard.classList.remove('jackpot-card');
+                spinBtn.disabled = false;
+                isSpinning = false;
+            }
+
+            // ──────────────────────────────────────
+            // FIREWORKS (Canvas)
+            // ──────────────────────────────────────
+            let fireworksParticles = [];
+            let fireworksRunning = false;
+            let fireworksRAF = null;
+
+            function startFireworks() {
+                fireworksRunning = true;
+                fireworksParticles = [];
+                spawnFireworkBursts();
+                if (!fireworksRAF) {
+                    animateFireworks();
+                }
+            }
+
+            function stopFireworks() {
+                fireworksRunning = false;
+                if (fireworksRAF) {
+                    cancelAnimationFrame(fireworksRAF);
+                    fireworksRAF = null;
+                }
+                ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+                fireworksParticles = [];
+            }
+
+            function spawnFireworkBursts() {
+                if (!fireworksRunning) return;
+                const cx = Math.random() * fireworksCanvas.width * 0.8 + fireworksCanvas.width * 0.1;
+                const cy = Math.random() * fireworksCanvas.height * 0.5 + fireworksCanvas.height * 0.1;
+                const colors = ['#ff6b8a', '#ff9eb5', '#ffd700', '#ffb347', '#ff6b6b', '#ff8c94', '#ffe0b2',
+                    '#ff4081', '#ffab40', '#fff176'
+                ];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const count = 60 + Math.floor(Math.random() * 40);
+                for (let i = 0; i < count; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = Math.random() * 6 + 2;
+                    fireworksParticles.push({
+                        x: cx,
+                        y: cy,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        life: 1,
+                        decay: Math.random() * 0.015 + 0.008,
+                        color: color,
+                        size: Math.random() * 3 + 1.5,
+                    });
+                }
+                // Schedule next burst
+                setTimeout(() => {
+                    if (fireworksRunning) spawnFireworkBursts();
+                }, 400 + Math.random() * 600);
+            }
+
+            function animateFireworks() {
+                if (!fireworksRunning) {
+                    fireworksRAF = null;
+                    return;
+                }
+                ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+                // Also fill with subtle dark overlay for contrast
+                ctx.fillStyle = 'rgba(0,0,0,0.08)';
+                ctx.fillRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+
+                for (let i = fireworksParticles.length - 1; i >= 0; i--) {
+                    const p = fireworksParticles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.04; // gravity
+                    p.life -= p.decay;
+                    if (p.life <= 0) {
+                        fireworksParticles.splice(i, 1);
+                        continue;
+                    }
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color.replace(')', `, ${p.life})`).replace('rgb',
+                        'rgba').replace('#ff', 'rgba(255,').replace('#FF', 'rgba(255,');
+                    // Better color handling
+                    ctx.globalAlpha = p.life;
+                    ctx.fillStyle = p.color;
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                    // Glow
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = p.life * 0.35;
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+                fireworksRAF = requestAnimationFrame(animateFireworks);
+            }
+
+            // ──────────────────────────────────────
+            // EXTRA HEARTS FOR JACKPOT
+            // ──────────────────────────────────────
+            function spawnExtraHearts(count) {
+                const heartEmojis = ['❤️', '💕', '💖', '💗', '💝', '💘', '🏆', '👑', '💎', '✨', '🌟'];
+                for (let i = 0; i < count; i++) {
+                    const heart = document.createElement('span');
+                    heart.classList.add('floating-heart');
+                    heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+                    heart.style.left = Math.random() * 95 + '%';
+                    heart.style.fontSize = (Math.random() * 40 + 20) + 'px';
+                    heart.style.animationDuration = (Math.random() * 5 + 4) + 's';
+                    heart.style.animationDelay = (Math.random() * 2) + 's';
+                    heart.style.opacity = '0';
+                    heart.style.zIndex = '205';
+                    heart.style.position = 'fixed';
+                    heart.style.pointerEvents = 'none';
+                    document.body.appendChild(heart);
+                    // Remove after animation
+                    const dur = parseFloat(heart.style.animationDuration) + parseFloat(heart.style
+                        .animationDelay);
+                    setTimeout(() => {
+                        if (heart.parentNode) heart.parentNode.removeChild(heart);
+                    }, dur * 1000 + 500);
+                }
+            }
+
+            // ──────────────────────────────────────
+            // CONFETTI
+            // ──────────────────────────────────────
+            function spawnConfetti(count) {
+                const colors = ['#ff6b8a', '#ff9eb5', '#ffd700', '#ffb347', '#ff6b6b', '#ff8c94',
+                    '#ffe0b2', '#ff4081', '#fff176', '#f8bbd0', '#ff80ab', '#ffab40'
+                ];
+                const shapes = ['●', '◆', '♥', '★', '⬤', '●'];
+                for (let i = 0; i < count; i++) {
+                    const particle = document.createElement('span');
+                    particle.classList.add('confetti-particle');
+                    particle.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+                    particle.style.position = 'fixed';
+                    particle.style.left = '50%';
+                    particle.style.top = '50%';
+                    particle.style.fontSize = (Math.random() * 16 + 10) + 'px';
+                    particle.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.setProperty('--dx', (Math.random() * 500 - 250) + 'px');
+                    particle.style.setProperty('--dy', (Math.random() * 600 + 200) + 'px');
+                    particle.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
+                    particle.style.animationDuration = (Math.random() * 1.5 + 1.2) + 's';
+                    particle.style.zIndex = '150';
+                    particle.style.pointerEvents = 'none';
+                    document.body.appendChild(particle);
+                    const dur = parseFloat(particle.style.animationDuration);
+                    setTimeout(() => {
+                        if (particle.parentNode) particle.parentNode.removeChild(particle);
+                    }, dur * 1000 + 200);
+                }
+            }
+
+            // ──────────────────────────────────────
+            // SPARKLES
+            // ──────────────────────────────────────
+            function spawnSparkles(count) {
+                for (let i = 0; i < count; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.classList.add('sparkle-dot');
+                    sparkle.style.position = 'fixed';
+                    sparkle.style.left = '50%';
+                    sparkle.style.top = '50%';
+                    sparkle.style.setProperty('--sx', (Math.random() * 300 - 150) + 'px');
+                    sparkle.style.setProperty('--sy', (Math.random() * 300 - 150) + 'px');
+                    sparkle.style.animationDuration = (Math.random() * 0.6 + 0.5) + 's';
+                    sparkle.style.width = (Math.random() * 8 + 5) + 'px';
+                    sparkle.style.height = sparkle.style.width;
+                    sparkle.style.background = Math.random() > 0.5 ? '#ffd700' : '#fff';
+                    sparkle.style.boxShadow =
+                        `0 0 ${Math.random() * 8 + 6}px ${sparkle.style.background}, 0 0 ${Math.random() * 16 + 8}px ${sparkle.style.background}`;
+                    document.body.appendChild(sparkle);
+                    const dur = parseFloat(sparkle.style.animationDuration);
+                    setTimeout(() => {
+                        if (sparkle.parentNode) sparkle.parentNode.removeChild(sparkle);
+                    }, dur * 1000 + 200);
+                }
+            }
+
+            // ──────────────────────────────────────
+            // LOVE POINTS DISPLAY
+            // ──────────────────────────────────────
+            function updatePointsDisplay(animate) {
+                pointsValueEl.textContent = lovePoints;
+                if (animate) {
+                    pointsDisplay.classList.remove('points-pop');
+                    void pointsDisplay.offsetWidth;
+                    pointsDisplay.classList.add('points-pop');
+                }
+            }
+
+            // ──────────────────────────────────────
+            // KEYBOARD SUPPORT
+            // ──────────────────────────────────────
+            document.addEventListener('keydown', function(e) {
+                if (e.code === 'Space' || e.code === 'Enter') {
+                    e.preventDefault();
+                    if (!isSpinning && rewardOverlay.style.display === 'none' && !jackpotCelebration
+                        .classList.contains('active')) {
+                        handleSpin();
+                    }
+                }
+                if (e.code === 'Escape') {
+                    if (jackpotCelebration.classList.contains('active')) {
+                        closeJackpotCelebration();
+                    } else if (rewardOverlay.style.display === 'flex') {
+                        closeRewardOverlay();
+                    }
+                }
+            });
+
+            // ──────────────────────────────────────
+            // STARTUP
+            // ──────────────────────────────────────
+            init();
+            updatePointsDisplay(false);
+            console.log('💖 Love Slot Machine ready! Press Space or tap "Spin for Love" to play.');
+            console.log('💕 Love Points loaded:', lovePoints);
+        })();
+    </script>
+</body>
+</html>
