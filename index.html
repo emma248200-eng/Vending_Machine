@@ -785,20 +785,21 @@
             // ──────────────────────────────────────
             // CONFIGURATION
             // ──────────────────────────────────────
-            const REWARDS = [
+              const REWARDS = [
                 { emoji: '💋', title: 'Kiss Coupon', message: 'Aap jbb bhi merese kiss le skte mai mna ni krr skti whenever u wanna kiss me use this coupon. 💋',
                     points: 10 },
                 { emoji: '🤗', title: 'Unlimited Hug Voucher',
                     message: 'This is the voucher of unlimited hugs hehehe! 🤗',
                     points: 10 },
                 { emoji: '🎬', title: 'Movie Night Date',
-                    message: 'Jbb aapko meresath movie dekhni ho to yeh use krna okay babbyy i won't be able to say no. 🎬🍿',
+                    // 🔧 FIXED: Changed to double quotes to avoid the apostrophe in "won't" breaking the string
+                    message: "Jbb aapko meresath movie dekhni ho to yeh use krna okay babbyy i won't be able to say no. 🎬🍿",
                     points: 10 },
                 { emoji: '🧸', title: 'You Owe Me Cuddles Card',
                     message: 'Official notice: You now legally owe me ALL the cuddles. Aapko meko tbtk hug krna hoga tbtk aapko acha na feel ho. 🧸',
                     points: 10 },
                 { emoji: '🍫', title: 'Sweet Treat Voucher',
-                    message: 'Aapko jbb bhi koi desert khane ka mnn ho to yeh coupon use krna i'll buy u one! 🍫🍰',
+                    message: 'Aapko jbb bhi koi desert khane ka mnn ho to yeh coupon use krna i\'ll buy u one! 🍫🍰',
                     points: 10 },
                 { emoji: '✨', title: 'One Wish Granted',
                     message: 'Your wish is my command! (Terms and conditions: wish must involve love, laughter, or us.) ✨',
@@ -817,6 +818,7 @@
                 points: 100,
             };
 
+          
             const JACKPOT_CHANCE = 0.06; // 6% chance
             const CYCLE_EMOJIS = ['💖', '💕', '💗', '💝', '💘', '🌸', '✨', '🎀', '💋', '🧸', '🌹', '🍫', '💌', '🤗', '🎬', '💎',
                 '🍀', '🌟'
